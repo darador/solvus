@@ -89,42 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
         draw();
     }
 
-    // --- SCROLL ANIMATED STATS COUNTER ---
-    const stats = document.querySelectorAll('.stat-num');
-    const observerOptions = {
-        threshold: 0.5,
-        rootMargin: '0px'
-    };
-
-    const countUp = (element) => {
-        const target = parseInt(element.getAttribute('data-val'), 10);
-        let current = 0;
-        const duration = 1500;
-        const increment = target / (duration / 16); // ~60fps
-        
-        const updateCount = () => {
-            current += increment;
-            if (current >= target) {
-                element.innerText = target === 100 ? 'AMBA' : (target === 99 ? '99%' : (target === 24 ? '24hs' : `+${target}`));
-            } else {
-                element.innerText = target === 100 ? 'AMBA' : (target === 99 ? `${Math.floor(current)}%` : (target === 24 ? `${Math.floor(current)}hs` : `+${Math.floor(current)}`));
-                requestAnimationFrame(updateCount);
-            }
-        };
-        updateCount();
-    };
-
-    const statsObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                countUp(entry.target);
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    stats.forEach(stat => statsObserver.observe(stat));
-
     // --- TESTIMONIAL CAROUSEL ---
     const track = document.getElementById('testimonialTrack');
     const slides = Array.from(track ? track.children : []);
