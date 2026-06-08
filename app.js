@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SOLVUS INTERACTION LOGIC (SIMPLIFIED)
+   SOLVUS INTERACTION LOGIC
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,107 +10,121 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (navToggle && navMenu) {
         navToggle.addEventListener('click', () => {
-            const isVisible = navMenu.style.display === 'flex';
-            navMenu.style.display = isVisible ? 'none' : 'flex';
-            if (!isVisible) {
-                navMenu.style.flexDirection = 'column';
-                navMenu.style.position = 'absolute';
-                navMenu.style.top = '68px';
-                navMenu.style.left = '0';
-                navMenu.style.width = '100%';
-                navMenu.style.background = '#0F172A';
-                navMenu.style.borderBottom = '1px solid var(--border-color)';
-                navMenu.style.padding = '20px';
-                navMenu.style.zIndex = '999';
+            navToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking nav links
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+    }
+
+    // --- ACTIVE NAVIGATION HIGHLIGHT ---
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    function highlightNavigation() {
+        let scrollPosition = window.scrollY + 100;
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            const sectionId = section.getAttribute('id');
+
+            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${sectionId}`) {
+                        link.classList.add('active');
+                    }
+                });
             }
         });
     }
 
-    // --- HERO BACKGROUND PARTICLES (NETWORKING) ---
-    const canvas = document.getElementById('heroCanvas');
-    if (canvas) {
-        const ctx = canvas.getContext('2d');
-        let width = canvas.width = canvas.offsetWidth;
-        let height = canvas.height = canvas.offsetHeight;
+    window.addEventListener('scroll', highlightNavigation);
+    highlightNavigation(); // Run once initially
 
-        window.addEventListener('resize', () => {
-            width = canvas.width = canvas.offsetWidth;
-            height = canvas.height = canvas.offsetHeight;
-        });
+    // --- PRESUPUESTO MODAL TRIGGER ---
+    const budgetModal = document.getElementById('presupuestoModal');
+    const openModalButtons = [
+        document.getElementById('btnPresupuestoHeader'),
+        document.getElementById('btnPresupuestoHero'),
+        document.getElementById('btnOpenPresupuestoModal')
+    ];
+    const closeModalButton = document.getElementById('btnCloseModal');
 
-        const particles = [];
-        const numParticles = 35;
-
-        for (let i = 0; i < numParticles; i++) {
-            particles.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.4,
-                vy: (Math.random() - 0.5) * 0.4,
-                radius: Math.random() * 2 + 1
+    // Open Modal
+    openModalButtons.forEach(btn => {
+        if (btn) {
+            btn.addEventListener('click', (e) => {
+                // If it is an anchor link to #contacto (on mobile / fallbacks), we prevent default to show modal
+                e.preventDefault();
+                if (budgetModal) {
+                    budgetModal.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Lock background scrolling
+                }
             });
         }
+    });
 
-        function draw() {
-            ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = 'rgba(59, 130, 246, 0.4)';
-            ctx.strokeStyle = 'rgba(6, 182, 212, 0.06)';
-            ctx.lineWidth = 1;
-
-            // Draw lines
-            for (let i = 0; i < numParticles; i++) {
-                for (let j = i + 1; j < numParticles; j++) {
-                    const dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
-                    if (dist < 100) {
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-
-            // Draw nodes
-            for (let i = 0; i < numParticles; i++) {
-                const p = particles[i];
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fill();
-
-                p.x += p.vx;
-                p.y += p.vy;
-
-                if (p.x < 0 || p.x > width) p.vx *= -1;
-                if (p.y < 0 || p.y > height) p.vy *= -1;
-            }
-
-            requestAnimationFrame(draw);
+    // Close Modal Function
+    function closeModal() {
+        if (budgetModal) {
+            budgetModal.classList.remove('active');
+            document.body.style.overflow = ''; // Unlock scrolling
         }
-        draw();
     }
 
-    // --- LEAD FORM CAPTURE & CONVERSION SUCCESS ---
+    if (closeModalButton) {
+        closeModalButton.addEventListener('click', closeModal);
+    }
+
+    // Close Modal on clicking outside the dialog content
+    if (budgetModal) {
+        budgetModal.addEventListener('click', (e) => {
+            if (e.target === budgetModal) {
+                closeModal();
+            }
+        });
+    }
+
+    // --- FORM CONVERSION SUBMISSION ---
     const leadForm = document.getElementById('leadForm');
-    if (leadForm) {
+    const modalFormContainer = document.getElementById('modalFormContainer');
+
+    if (leadForm && modalFormContainer) {
         leadForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
+
             const name = document.getElementById('name').value;
             const phone = document.getElementById('phone').value;
             const service = document.getElementById('service').value;
             const location = document.getElementById('location').value;
-            
-            // Visual trust feedback upon conversion success
-            leadForm.innerHTML = `
-                <div style="text-align: center; padding: 30px 10px; color: var(--text-pure);">
-                    <div style="width: 54px; height: 54px; border-radius: 50%; background: rgba(34, 197, 94, 0.1); color: var(--success); display: inline-flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 16px;">
+
+            // Render a premium success state inside the modal
+            modalFormContainer.innerHTML = `
+                <div style="text-align: center; padding: 20px 0;">
+                    <div style="width: 64px; height: 64px; border-radius: 50%; background: #DCFCE7; color: #15803D; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 20px;">
                         ✓
                     </div>
-                    <h3 style="font-size: 1.35rem; margin-bottom: 10px; color: var(--text-pure);">¡Solicitud Recibida, ${name}!</h3>
-                    <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Analizaremos tu requerimiento para <strong>${service}</strong> en <strong>${location}</strong> y te contactaremos por WhatsApp o llamada al <strong>${phone}</strong> a la brevedad.</p>
-                    <a href="https://wa.me/5491100000000?text=Hola!%20Acabo%20de%20enviar%20una%20solicitud%20para%20${service}%20en%20${location}" target="_blank" class="btn btn-whatsapp">
-                        Acelerar por WhatsApp
-                    </a>
+                    <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; color: var(--text-primary);">¡Solicitud Recibida, ${name}!</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 0.95rem; line-height: 1.5;">
+                        Analizaremos tus necesidades de <strong>${service}</strong> en <strong>${location}</strong>. Te enviaremos una cotización técnica detallada a la brevedad.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 12px; max-width: 320px; margin: 0 auto;">
+                        <a href="https://wa.me/5491123455678?text=Hola!%20Acabo%20de%20solicitar%20un%20presupuesto%20para%20${encodeURIComponent(service)}%20en%20${encodeURIComponent(location)}.%20Mi%20nombre%20es%20${encodeURIComponent(name)}." target="_blank" class="btn btn-whatsapp-hero" style="width: 100%;">
+                            Acelerar por WhatsApp
+                        </a>
+                        <button type="button" class="btn btn-secondary-outline" onclick="location.reload()" style="width: 100%;">
+                            Cerrar Ventana
+                        </button>
+                    </div>
                 </div>
             `;
         });
