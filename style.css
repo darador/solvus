@@ -609,75 +609,217 @@ p {
 }
 
 /* ==========================================================================
-   REAL WORKS GALLERY SECTION
+   REAL WORKS PREMIUM PORTFOLIO SECTION
    ========================================================================== */
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    margin-top: 20px;
-}
-
-.gallery-item {
-    position: relative;
-    height: 220px;
-    overflow: hidden;
-    border-radius: var(--border-radius-lg);
-    cursor: pointer;
-    transition: var(--transition-smooth);
-}
-
-.gallery-placeholder {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(20, 20, 27, 0.9) 0%, rgba(10, 10, 14, 0.95) 100%);
+.portfolio-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    color: var(--text-dark);
+    gap: 32px;
+}
+
+/* Featured Project layout */
+.portfolio-featured {
+    display: grid;
+    grid-template-columns: 55% 45%;
+    overflow: hidden;
     transition: var(--transition-smooth);
 }
-
-.gallery-placeholder span {
-    font-size: 0.9rem;
-    font-weight: 500;
+.portfolio-featured:hover {
+    border-color: var(--border-hover);
+    box-shadow: 0 12px 40px rgba(37,99,235,0.08);
 }
 
-.gallery-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
+.portfolio-visual {
+    position: relative;
+    display: flex;
+    background: #09090C;
+    overflow: hidden;
+}
+.portfolio-visual svg {
     width: 100%;
-    padding: 24px;
-    background: linear-gradient(to top, rgba(7,7,9,0.95) 0%, rgba(7,7,9,0) 100%);
-    opacity: 0;
-    transform: translateY(10px);
+    height: 100%;
+    display: block;
     transition: var(--transition-smooth);
 }
-
-.gallery-overlay h4 {
-    font-size: 1.1rem;
-    color: var(--text-pure);
-    margin-bottom: 4px;
+.portfolio-featured:hover .portfolio-visual svg {
+    transform: scale(1.02);
 }
 
-.gallery-overlay p {
+.visual-tag {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: var(--primary);
+    color: var(--text-pure);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4);
+}
+
+.portfolio-info {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.portfolio-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.portfolio-category {
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: var(--secondary);
+}
+
+.portfolio-location {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     font-size: 0.8rem;
     color: var(--text-muted);
 }
 
-.gallery-item:hover {
+.portfolio-info h3 {
+    font-size: 1.75rem;
+    margin-bottom: 16px;
+    color: var(--text-pure);
+}
+
+.portfolio-desc {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.portfolio-highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.highlight-box {
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    border-radius: var(--border-radius-md);
+    line-height: 1.5;
+}
+.highlight-box.before {
+    background: rgba(239, 68, 68, 0.03);
+    border-left: 3px solid var(--danger);
+    color: #FCA5A5;
+}
+.highlight-box.after {
+    background: rgba(16, 185, 129, 0.04);
+    border-left: 3px solid var(--success);
+    color: #A7F3D0;
+}
+
+.portfolio-equipment {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.equip-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: 100px;
+    color: var(--text-muted);
+}
+
+/* Portfolio Grid of Smaller Cards */
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.portfolio-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+}
+.portfolio-card:hover {
     border-color: var(--border-hover);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.05);
 }
-.gallery-item:hover .gallery-placeholder {
-    color: var(--secondary);
+
+.portfolio-visual-small {
+    position: relative;
+    height: 180px;
+    background: #09090C;
+    overflow: hidden;
+    display: flex;
 }
-.gallery-item:hover .gallery-overlay {
-    opacity: 1;
-    transform: translateY(0);
+.portfolio-visual-small svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    transition: var(--transition-smooth);
+}
+.portfolio-card:hover .portfolio-visual-small svg {
+    transform: scale(1.03);
+}
+
+.portfolio-card-body {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.portfolio-card-body h4 {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+    color: var(--text-pure);
+}
+
+.portfolio-card-body .portfolio-desc {
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+}
+
+.highlight-item-bullet {
+    border-left: 2px solid var(--secondary);
+    padding-left: 8px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.portfolio-equipment-small {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+}
+
+.portfolio-equipment-small span {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 4px 8px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-dark);
 }
 
 /* ==========================================================================
@@ -1313,11 +1455,11 @@ p {
     .advantages-grid {
         grid-template-columns: 1fr 1fr;
     }
-    .gallery-grid {
-        grid-template-columns: 1fr 1fr;
+    .portfolio-featured {
+        grid-template-columns: 1fr;
     }
-    .gallery-item[style*="span 2"] {
-        grid-column: span 2;
+    .portfolio-grid {
+        grid-template-columns: 1fr 1fr;
     }
     .services-grid {
         grid-template-columns: 1fr 1fr;
@@ -1357,11 +1499,8 @@ p {
     .advantages-grid {
         grid-template-columns: 1fr;
     }
-    .gallery-grid {
+    .portfolio-grid {
         grid-template-columns: 1fr;
-    }
-    .gallery-item[style*="span 2"] {
-        grid-column: span 1;
     }
     .services-grid {
         grid-template-columns: 1fr;
